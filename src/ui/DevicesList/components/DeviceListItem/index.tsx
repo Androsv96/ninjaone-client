@@ -4,10 +4,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 import Icon from "@mui/material/Icon";
 import ListItemText from "@mui/material/ListItemText";
-import Tooltip from "@mui/material/Tooltip";
 
 import { DEVICE } from "../../../../utils/interfaces";
 import {
@@ -15,14 +13,7 @@ import {
   getDeviceLogo,
 } from "../../../../utils/functions";
 
-import {
-  CustomModal,
-  CustomTooltip,
-  DevicesOptionsTooltip,
-} from "../../../../components";
-
-import dotsImg from "../../../../assets/dots.svg";
-
+import { CustomModal, DevicesOptionsTooltip } from "../../../../components";
 interface Props {
   device: DEVICE;
   hoveredListItemId: string;
@@ -36,8 +27,18 @@ export const DeviceListItem = ({
 }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleCloseTooltip = () => setShowTooltip(false);
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   return (
     <>
@@ -93,34 +94,11 @@ export const DeviceListItem = ({
               color: "#6E6D7A",
             }}
           >
-            {capitalizeFirstLetter(device.type)} workstation -{" "}
+            {capitalizeFirstLetter(device.type)} workstation -
             {device.hdd_capacity} GB
           </Typography>
         </Box>
-        {hoveredListItemId === device.id && (
-          <ListItemSecondaryAction>
-            <CustomTooltip
-              handleTooltipClose={handleCloseTooltip}
-              open={showTooltip}
-              title={<DevicesOptionsTooltip />}
-            >
-              <Icon
-                sx={{
-                  width: 32,
-                  height: 32,
-                  backgroundColor: "white",
-                  borderRadius: "4px",
-                  ":hover": {
-                    cursor: "pointer",
-                  },
-                }}
-                onClick={() => setShowTooltip(true)}
-              >
-                <img src={dotsImg} alt="dotsImg" />
-              </Icon>
-            </CustomTooltip>
-          </ListItemSecondaryAction>
-        )}
+        {hoveredListItemId === device.id && <DevicesOptionsTooltip />}
       </ListItem>
       <CustomModal title="testing" action="submit" show={showModal}>
         You are about to delete the device DESKTOP-0VCBIFF. This action cannot
