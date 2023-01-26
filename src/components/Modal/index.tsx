@@ -9,15 +9,16 @@ import Button from "@mui/material/Button";
 import closeImg from "../../assets/close.svg";
 
 interface Props {
+  show: boolean;
   title: string;
   children?: ReactNode;
   action: "submit" | "delete";
 }
 
-export const CustomModal = ({ title, children, action }: Props) => {
+export const CustomModal = ({ title, show, children, action }: Props) => {
   return (
     <Modal
-      open={true}
+      open={show}
       BackdropComponent={() => (
         <div
           style={{
@@ -53,6 +54,9 @@ export const CustomModal = ({ title, children, action }: Props) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              ":hover": {
+                cursor: "pointer",
+              },
             }}
           >
             <img src={closeImg} alt="closeImg" />

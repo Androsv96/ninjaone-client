@@ -9,10 +9,13 @@ import { GET_DEVICES_URL } from "../../utils/constants";
 import { DEVICE } from "../../utils/interfaces";
 
 export const DevicesList = () => {
-  const [hoveredListItem, setHoveredListItem] = useState("");
+  const [selectedListItem, setSelectedListItem] = useState("");
   const [devicesData, setDevicesData] = useState<DEVICE[]>([]);
 
-  const handleOnHoverListItem = (id: string) => setHoveredListItem(id);
+  const handleOnSelectedListItem = (id: string) => {
+    if (id === selectedListItem) return setSelectedListItem("");
+    setSelectedListItem(id);
+  };
 
   const getDevices = useCallback(async () => {
     const rawData = await fetch(GET_DEVICES_URL);
@@ -61,9 +64,9 @@ export const DevicesList = () => {
             devicesData.map((device) => (
               <DeviceListItem
                 key={device.id}
-                hoveredListItemId={hoveredListItem}
+                hoveredListItemId={selectedListItem}
                 device={device}
-                handleOnHover={handleOnHoverListItem}
+                setSelectedDevice={handleOnSelectedListItem}
               />
             ))}
         </List>

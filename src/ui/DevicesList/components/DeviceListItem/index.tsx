@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
@@ -5,6 +7,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 import Icon from "@mui/material/Icon";
 import ListItemText from "@mui/material/ListItemText";
+import Tooltip from "@mui/material/Tooltip";
 
 import { DEVICE } from "../../../../utils/interfaces";
 import {
@@ -12,20 +15,30 @@ import {
   getDeviceLogo,
 } from "../../../../utils/functions";
 
+import {
+  CustomModal,
+  CustomTooltip,
+  DevicesOptionsTooltip,
+} from "../../../../components";
+
 import dotsImg from "../../../../assets/dots.svg";
-import { CustomModal } from "../../../../components";
 
 interface Props {
   device: DEVICE;
   hoveredListItemId: string;
-  handleOnHover: (id: string) => void;
+  setSelectedDevice: (id: string) => void;
 }
 
 export const DeviceListItem = ({
   device,
   hoveredListItemId,
-  handleOnHover,
+  setSelectedDevice,
 }: Props) => {
+  const [showModal, setShowModal] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handleCloseTooltip = () => setShowTooltip(false);
+
   return (
     <>
       <ListItem
@@ -37,12 +50,15 @@ export const DeviceListItem = ({
           lineHeight: "17px",
           fontWeight: 500,
           bgcolor: device.id === hoveredListItemId ? "#F4F4F5" : "",
+          ":hover": {
+            bgcolor: device.id !== hoveredListItemId ? "#eaeaea" : "",
+            cursor: "pointer",
+          },
           ":last-child": {
             borderBottom: "1px solid #CBCFD3",
           },
         }}
-        onMouseEnter={() => handleOnHover(device.id)}
-        onMouseLeave={() => handleOnHover("")}
+        onClick={() => setSelectedDevice(device.id)}
       >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <Box sx={{ display: "flex" }}>
@@ -83,24 +99,30 @@ export const DeviceListItem = ({
         </Box>
         {hoveredListItemId === device.id && (
           <ListItemSecondaryAction>
-            <Icon
-              sx={{
-                width: 32,
-                height: 32,
-                backgroundColor: "white",
-                borderRadius: "4px",
-                ":hover": {
-                  cursor: "pointer",
-                },
-              }}
-              onMouseEnter={() => handleOnHover(device.id)}
+            <CustomTooltip
+              handleTooltipClose={handleCloseTooltip}
+              open={showTooltip}
+              title={<DevicesOptionsTooltip />}
             >
-              <img src={dotsImg} alt="dotsImg" />
-            </Icon>
+              <Icon
+                sx={{
+                  width: 32,
+                  height: 32,
+                  backgroundColor: "white",
+                  borderRadius: "4px",
+                  ":hover": {
+                    cursor: "pointer",
+                  },
+                }}
+                onClick={() => setShowTooltip(true)}
+              >
+                <img src={dotsImg} alt="dotsImg" />
+              </Icon>
+            </CustomTooltip>
           </ListItemSecondaryAction>
         )}
       </ListItem>
-      <CustomModal title="testing" action="submit">
+      <CustomModal title="testing" action="submit" show={showModal}>
         You are about to delete the device DESKTOP-0VCBIFF. This action cannot
         be undone.
       </CustomModal>
