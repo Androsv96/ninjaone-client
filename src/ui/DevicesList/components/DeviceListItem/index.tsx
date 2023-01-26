@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
@@ -18,11 +16,15 @@ import dotsImg from "../../../../assets/dots.svg";
 
 interface Props {
   device: DEVICE;
+  hoveredListItemId: string;
+  handleOnHover: (id: string) => void;
 }
 
-export const DeviceListItem = ({ device }: Props) => {
-  const [showOptionsDots, setShowOptionsDots] = useState(false);
-
+export const DeviceListItem = ({
+  device,
+  hoveredListItemId,
+  handleOnHover,
+}: Props) => {
   return (
     <ListItem
       key={device.id}
@@ -32,12 +34,10 @@ export const DeviceListItem = ({ device }: Props) => {
         color: "#211F33",
         lineHeight: "17px",
         fontWeight: 500,
-        ":hover": {
-          backgroundColor: "#F4F4F5",
-        },
+        bgcolor: device.id === hoveredListItemId ? "#F4F4F5" : "",
       }}
-      onMouseOver={() => setShowOptionsDots(true)}
-      onMouseOut={() => setShowOptionsDots(false)}
+      onMouseEnter={() => handleOnHover(device.id)}
+      onMouseLeave={() => handleOnHover("")}
     >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Box sx={{ display: "flex" }}>
@@ -76,7 +76,7 @@ export const DeviceListItem = ({ device }: Props) => {
           {device.hdd_capacity} GB
         </Typography>
       </Box>
-      {showOptionsDots && (
+      {hoveredListItemId === device.id && (
         <ListItemSecondaryAction>
           <Icon
             sx={{
@@ -84,7 +84,11 @@ export const DeviceListItem = ({ device }: Props) => {
               height: 32,
               backgroundColor: "white",
               borderRadius: "4px",
+              ":hover": {
+                cursor: "pointer",
+              },
             }}
+            onMouseEnter={() => handleOnHover(device.id)}
           >
             <img src={dotsImg} alt="dotsImg" />
           </Icon>
