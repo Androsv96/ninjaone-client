@@ -1,1 +1,2 @@
-export * from './Appbar'
+export * from "./Appbar";
+export * from "./Modal";
