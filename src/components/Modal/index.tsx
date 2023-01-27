@@ -4,6 +4,7 @@ import Modal from "@mui/material/Modal";
 import Icon from "@mui/material/Icon";
 import Button from "@mui/material/Button";
 
+import { ConfirmDeleteDevice, DeviceForm } from "../";
 import {
   getActionToPerform,
   getMethodFromActionToPerform,
@@ -21,22 +22,6 @@ export const CustomModal = () => {
   );
 
   const handleCloseModal = () => dispatch(setShowModal(false));
-
-  const handleSubmit = () => {
-    const method = getMethodFromActionToPerform(actionToPerform);
-    if (method === "DELETE") return handleDeleteDevice();
-  };
-
-  const handleDeleteDevice = async () => {
-    const rawData = await fetch(`${GET_DEVICES_URL}/${selectedDevice.id}`, {
-      method: "DELETE",
-    });
-    const data = await rawData.json();
-    if (data) {
-      dispatch(setShowModal(false));
-      dispatch(setRefetchDevices(true));
-    }
-  };
 
   return (
     <Modal
@@ -86,36 +71,8 @@ export const CustomModal = () => {
           </Icon>
         </Box>
         <Box mt="24px">
-          <Typography
-            sx={{ fontSize: "14px", lineHeight: "16px", fontWeight: 400 }}
-          >
-            You are about to delete the device{" "}
-            <Typography component={"span"} fontWeight={700}>
-              {`${selectedDevice.system_name}. `}
-            </Typography>
-            This action cannot be undone.
-          </Typography>
-        </Box>
-        <Box sx={{ display: "flex", justifyContent: "end", marginTop: "32px" }}>
-          <Button
-            variant="outlined"
-            sx={{ marginRight: "8px" }}
-            onClick={handleCloseModal}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              bgcolor: actionToPerform === "delete" ? "#D53948" : "#337AB7",
-              ":hover": {
-                bgcolor: actionToPerform === "delete" ? "#d51414" : "#3370fb",
-              },
-            }}
-            onClick={handleSubmit}
-          >
-            {actionToPerform === "delete" ? "Delete" : "Submit"}
-          </Button>
+          {/* <ConfirmDeleteDevice systemName={selectedDevice.system_name} handleCloseModal={handleCloseModal} /> */}
+          <DeviceForm handleCloseModal={handleCloseModal} />
         </Box>
       </Box>
     </Modal>

@@ -1,4 +1,4 @@
-export type DEVICE_TYPES = "WINDOWS" | "MAC" | "LINUX";
+export type DEVICE_TYPES = "WINDOWS" | "MAC" | "LINUX" | "";
 
 export interface DEVICE {
   id: string;

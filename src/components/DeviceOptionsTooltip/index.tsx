@@ -35,6 +35,15 @@ export const DevicesOptionsTooltip = ({ device }: Props) => {
       })
     );
   };
+  const handleOnEditOptionClick = () => {
+    dispatch(setShowModal(true));
+    dispatch(
+      setActionToPerform({
+        action: "edit",
+        selectedDevice: device,
+      })
+    );
+  };
 
   const open = Boolean(anchorEl);
   const id = open ? "deviceOptions" : undefined;
@@ -94,6 +103,7 @@ export const DevicesOptionsTooltip = ({ device }: Props) => {
               lineHeight: "21px",
               ":hover": { cursor: "pointer", textDecoration: "underline" },
             }}
+            onClick={handleOnEditOptionClick}
           >
             Edit
           </Typography>
