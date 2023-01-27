@@ -2,24 +2,42 @@ import { useRef, useState } from "react";
 
 import Popover from "@mui/material/Popover";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
-
-import dotsImg from "../../assets/dots.svg";
+import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Icon from "@mui/material/Icon";
-import { Typography } from "@mui/material";
 
-export const DevicesOptionsTooltip = () => {
+import { useAppDispatch } from "../../redux/hooks";
+import { setShowModal, setActionToPerform } from "../../redux/slices/ui";
+import dotsImg from "../../assets/dots.svg";
+import { DEVICE } from "../../redux/slices/devices/interfaces";
+
+interface Props {
+  device: DEVICE;
+}
+
+export const DevicesOptionsTooltip = ({ device }: Props) => {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
   const iconRef = useRef<HTMLSpanElement>(null);
+
   const handleClick = () => {
     if (iconRef) {
       setAnchorEl(iconRef.current);
     }
   };
   const handleClose = () => setAnchorEl(null);
+  const handleOnDeleteOptionClick = () => {
+    dispatch(setShowModal(true));
+    dispatch(
+      setActionToPerform({
+        action: "delete",
+        selectedDevice: device,
+      })
+    );
+  };
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  const id = open ? "deviceOptions" : undefined;
 
   return (
     <ListItemSecondaryAction sx={{ position: "absolute" }}>
@@ -86,6 +104,7 @@ export const DevicesOptionsTooltip = () => {
               color: "#D53948",
               ":hover": { cursor: "pointer", textDecoration: "underline" },
             }}
+            onClick={handleOnDeleteOptionClick}
           >
             Delete
           </Typography>

@@ -1,24 +1,46 @@
-import { ReactNode } from "react";
-
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Icon from "@mui/material/Icon";
 import Button from "@mui/material/Button";
 
+import {
+  getActionToPerform,
+  getMethodFromActionToPerform,
+} from "../../utils/functions";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/";
+import { setRefetchDevices } from "../../redux/slices/devices";
+import { setShowModal } from "../../redux/slices/ui";
+import { GET_DEVICES_URL } from "../../utils/constants";
 import closeImg from "../../assets/close.svg";
 
-interface Props {
-  show: boolean;
-  title: string;
-  children?: ReactNode;
-  action: "submit" | "delete";
-}
+export const CustomModal = () => {
+  const dispatch = useAppDispatch();
+  const { showModal, actionToPerform, selectedDevice } = useAppSelector(
+    (state) => state.uiSlice
+  );
 
-export const CustomModal = ({ title, show, children, action }: Props) => {
+  const handleCloseModal = () => dispatch(setShowModal(false));
+
+  const handleSubmit = () => {
+    const method = getMethodFromActionToPerform(actionToPerform);
+    if (method === "DELETE") return handleDeleteDevice();
+  };
+
+  const handleDeleteDevice = async () => {
+    const rawData = await fetch(`${GET_DEVICES_URL}/${selectedDevice.id}`, {
+      method: "DELETE",
+    });
+    const data = await rawData.json();
+    if (data) {
+      dispatch(setShowModal(false));
+      dispatch(setRefetchDevices(true));
+    }
+  };
+
   return (
     <Modal
-      open={show}
+      open={showModal}
       BackdropComponent={() => (
         <div
           style={{
@@ -47,7 +69,7 @@ export const CustomModal = ({ title, show, children, action }: Props) => {
           <Typography
             sx={{ fontSize: "24px", lineHeight: "29px", fontWeight: 500 }}
           >
-            {title}
+            {getActionToPerform(actionToPerform)}
           </Typography>
           <Icon
             sx={{
@@ -58,17 +80,41 @@ export const CustomModal = ({ title, show, children, action }: Props) => {
                 cursor: "pointer",
               },
             }}
+            onClick={handleCloseModal}
           >
             <img src={closeImg} alt="closeImg" />
           </Icon>
         </Box>
-        <Box mt="24px">{children}</Box>
+        <Box mt="24px">
+          <Typography
+            sx={{ fontSize: "14px", lineHeight: "16px", fontWeight: 400 }}
+          >
+            You are about to delete the device{" "}
+            <Typography component={"span"} fontWeight={700}>
+              {`${selectedDevice.system_name}. `}
+            </Typography>
+            This action cannot be undone.
+          </Typography>
+        </Box>
         <Box sx={{ display: "flex", justifyContent: "end", marginTop: "32px" }}>
-          <Button variant="outlined" sx={{ marginRight: "8px" }}>
+          <Button
+            variant="outlined"
+            sx={{ marginRight: "8px" }}
+            onClick={handleCloseModal}
+          >
             Cancel
           </Button>
-          <Button variant="contained">
-            {action === "submit" ? "Submit" : "Delete"}
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: actionToPerform === "delete" ? "#D53948" : "#337AB7",
+              ":hover": {
+                bgcolor: actionToPerform === "delete" ? "#d51414" : "#3370fb",
+              },
+            }}
+            onClick={handleSubmit}
+          >
+            {actionToPerform === "delete" ? "Delete" : "Submit"}
           </Button>
         </Box>
       </Box>

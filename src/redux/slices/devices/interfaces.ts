@@ -6,3 +6,8 @@ export interface DEVICE {
   type: DEVICE_TYPES;
   hdd_capacity: string;
 }
+
+export interface DEVICES_SLICE_INITIAL_STATE {
+  devices: DEVICE[];
+  refetchDevices: boolean;
+}

@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
@@ -7,7 +5,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Icon from "@mui/material/Icon";
 import ListItemText from "@mui/material/ListItemText";
 
-import { DEVICE } from "../../../../utils/interfaces";
+import { DEVICE } from "../../../../redux/slices/devices/interfaces";
 import {
   capitalizeFirstLetter,
   getDeviceLogo,
@@ -25,21 +23,6 @@ export const DeviceListItem = ({
   hoveredListItemId,
   setSelectedDevice,
 }: Props) => {
-  const [showModal, setShowModal] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-  const handleCloseTooltip = () => setShowTooltip(false);
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
   return (
     <>
       <ListItem
@@ -98,12 +81,11 @@ export const DeviceListItem = ({
             {device.hdd_capacity} GB
           </Typography>
         </Box>
-        {hoveredListItemId === device.id && <DevicesOptionsTooltip />}
+        {hoveredListItemId === device.id && (
+          <DevicesOptionsTooltip device={device} />
+        )}
       </ListItem>
-      <CustomModal title="testing" action="submit" show={showModal}>
-        You are about to delete the device DESKTOP-0VCBIFF. This action cannot
-        be undone.
-      </CustomModal>
+      <CustomModal />
     </>
   );
 };
