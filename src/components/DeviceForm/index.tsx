@@ -21,40 +21,50 @@ interface Props {
 
 export const DeviceForm = ({ handleCloseModal }: Props) => {
   const dispatch = useAppDispatch();
-  const { selectedDevice } = useAppSelector((state) => state.uiSlice);
+  const { selectedDevice, actionToPerform } = useAppSelector(
+    (state) => state.uiSlice
+  );
 
-  const { values, errors, handleChange, handleSubmit } = useFormik<DEVICE>({
-    initialValues: {
-      hdd_capacity: selectedDevice.hdd_capacity ?? "",
-      id: selectedDevice.id ?? "",
-      system_name: selectedDevice.system_name ?? "",
-      type: selectedDevice.type ?? "",
-    },
-    onSubmit: async (formData) => {
-      const updatedDevice = new FormData();
-      updatedDevice.append("hdd_capacity", formData.hdd_capacity);
-      updatedDevice.append("system_name", formData.system_name);
-      updatedDevice.append("type", formData.type);
-      try {
-        const rawData = await fetch(`${GET_DEVICES_URL}/${selectedDevice.id}`, {
-          method: "PUT",
-          body: JSON.stringify(formData),
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await rawData.json();
-        if (data) {
-          dispatch(setShowModal(false));
-          dispatch(setRefetchDevices(true));
+  const { values, errors, handleChange, handleSubmit, setFieldValue } =
+    useFormik<DEVICE>({
+      initialValues: {
+        hdd_capacity: selectedDevice.hdd_capacity ?? "",
+        id: selectedDevice.id ?? "",
+        system_name: selectedDevice.system_name ?? "",
+        type: selectedDevice.type ?? "",
+      },
+      onSubmit: async (formData) => {
+        try {
+          const rawData = await fetch(
+            `${GET_DEVICES_URL}/${
+              actionToPerform === "edit" ? selectedDevice.id : ""
+            }`,
+            {
+              method: actionToPerform === "add" ? "POST" : "PUT",
+              body: JSON.stringify(formData),
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = await rawData.json();
+          if (data) {
+            dispatch(setShowModal(false));
+            dispatch(setRefetchDevices(true));
+          }
+        } catch (e) {
+          console.log("There was an error updating the device ", e);
         }
-      } catch (e) {
-        console.log("There was an error updating the device ", e);
-      }
-    },
-    validationSchema,
-  });
+      },
+      validationSchema,
+    });
+
+  const handleCapacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regex = new RegExp(/^[0-9]*$/);
+    if (regex.test(e.currentTarget.value))
+      setFieldValue("hdd_capacity", e.currentTarget.value);
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -71,7 +81,6 @@ export const DeviceForm = ({ handleCloseModal }: Props) => {
         </label>
         <label style={{ marginTop: "6px" }}>Device type *</label>
         <Select
-          placeholder="Select type"
           sx={{ marginTop: "2px" }}
           displayEmpty
           name="type"
@@ -93,7 +102,7 @@ export const DeviceForm = ({ handleCloseModal }: Props) => {
           <TextField
             sx={{ marginTop: "2px" }}
             name="hdd_capacity"
-            onChange={handleChange}
+            onChange={handleCapacityChange}
             value={values.hdd_capacity}
           />
           {errors.hdd_capacity && <ErrorLabel message={errors.hdd_capacity} />}

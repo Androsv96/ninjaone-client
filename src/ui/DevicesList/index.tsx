@@ -9,11 +9,13 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { DeviceListItem } from "./components";
 import { GET_DEVICES_URL } from "../../utils/constants";
 import { setDevices, setRefetchDevices } from "../../redux/slices/devices";
+import { AddDevice, Filters } from "../";
 
 export const DevicesList = () => {
   const dispatch = useAppDispatch();
-  const { refetchDevices } = useAppSelector((state) => state.devicesSlice);
-  const { devices } = useAppSelector((state) => state.devicesSlice);
+  const { refetchDevices, devices } = useAppSelector(
+    (state) => state.devicesSlice
+  );
   const [selectedListItem, setSelectedListItem] = useState("");
 
   const handleOnSelectedListItem = (id: string) => {
@@ -42,16 +44,8 @@ export const DevicesList = () => {
     <Box
       sx={{ display: "flex", flexDirection: "column", padding: "24px 31px" }}
     >
-      <Typography
-        sx={{
-          color: "#211F33",
-          fontWeight: 500,
-          fontSize: "24px",
-          lineHeight: "24px",
-        }}
-      >
-        Devices
-      </Typography>
+      <AddDevice />
+      <Filters />
 
       <Typography
         sx={{

@@ -77,8 +77,8 @@ export const DeviceListItem = ({
               color: "#6E6D7A",
             }}
           >
-            {capitalizeFirstLetter(device.type)} workstation -
-            {device.hdd_capacity} GB
+            {` ${capitalizeFirstLetter(device.type)} workstation -
+            ${device.hdd_capacity} GB`}
           </Typography>
         </Box>
         {hoveredListItemId === device.id && (

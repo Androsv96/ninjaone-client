@@ -1,4 +1,8 @@
-import { DEVICE_TYPES } from "../redux/slices/devices/interfaces";
+import {
+  DEVICE,
+  DEVICE_TYPES,
+  SORT_TYPES,
+} from "../redux/slices/devices/interfaces";
 
 import { ACTIONS_TO_PERFORM } from "../redux/slices/ui/interface";
 import windowsLogo from "../assets/windows.svg";
@@ -56,4 +60,21 @@ export const getMethodFromActionToPerform = (
     default:
       return "GET";
   }
+};
+
+export const sortDescending = (devices: DEVICE[], sortType: SORT_TYPES) => {
+  if (sortType === "hdd_capacity") {
+    return devices.sort((a, b) =>
+      Number(a.hdd_capacity) > Number(b.hdd_capacity) ? -1 : 1
+    );
+  }
+  if (sortType === "name") {
+    return devices.sort((a, b) =>
+      a.system_name.toLocaleLowerCase() > b.system_name.toLocaleLowerCase()
+        ? 1
+        : -1
+    );
+  }
+
+  return devices;
 };

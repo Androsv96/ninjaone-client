@@ -2,17 +2,11 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Icon from "@mui/material/Icon";
-import Button from "@mui/material/Button";
 
 import { ConfirmDeleteDevice, DeviceForm } from "../";
-import {
-  getActionToPerform,
-  getMethodFromActionToPerform,
-} from "../../utils/functions";
+import { getActionToPerform } from "../../utils/functions";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/";
-import { setRefetchDevices } from "../../redux/slices/devices";
 import { setShowModal } from "../../redux/slices/ui";
-import { GET_DEVICES_URL } from "../../utils/constants";
 import closeImg from "../../assets/close.svg";
 
 export const CustomModal = () => {
@@ -71,8 +65,14 @@ export const CustomModal = () => {
           </Icon>
         </Box>
         <Box mt="24px">
-          {/* <ConfirmDeleteDevice systemName={selectedDevice.system_name} handleCloseModal={handleCloseModal} /> */}
-          <DeviceForm handleCloseModal={handleCloseModal} />
+          {actionToPerform === "delete" ? (
+            <ConfirmDeleteDevice
+              systemName={selectedDevice.system_name}
+              handleCloseModal={handleCloseModal}
+            />
+          ) : (
+            <DeviceForm handleCloseModal={handleCloseModal} />
+          )}
         </Box>
       </Box>
     </Modal>
