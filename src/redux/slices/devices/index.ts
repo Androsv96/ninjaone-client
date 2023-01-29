@@ -23,14 +23,14 @@ const deviceSlice = createSlice({
     setDevices(state, action: PayloadAction<DEVICE[]>) {
       const newDevices = action.payload;
       state.devices = newDevices;
-      state.filteredDevices = filterDevices(newDevices, state.filterBy);
-      state.filteredDevices = sortDescending(newDevices, state.sortBy);
+      const filteredDevices = filterDevices(newDevices, state.filterBy);
+      state.filteredDevices = sortDescending(filteredDevices, state.sortBy);
     },
     setRefetchDevices(state, action: PayloadAction<boolean>) {
       state.refetchDevices = action.payload;
     },
     setSortBy(state, action: PayloadAction<SORT_TYPES>) {
-      const newDevices = [...state.devices];
+      const newDevices = [...state.filteredDevices];
       state.filteredDevices = sortDescending(newDevices, action.payload);
       state.sortBy = action.payload;
     },

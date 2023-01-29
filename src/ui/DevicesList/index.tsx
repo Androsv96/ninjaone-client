@@ -16,6 +16,7 @@ export const DevicesList = () => {
   const { refetchDevices, filteredDevices } = useAppSelector(
     (state) => state.devicesSlice
   );
+
   const [selectedListItem, setSelectedListItem] = useState("");
 
   const handleOnSelectedListItem = (id: string) => {
