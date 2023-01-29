@@ -11,7 +11,7 @@ import linuxLogo from "../assets/linux.svg";
 import appleLogo from "../assets/apple.svg";
 
 export const capitalizeFirstLetter = (str: string) =>
-  str.charAt(0).toLocaleUpperCase() + str.slice(1).toLocaleLowerCase();
+  str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 export const getDeviceLogo = (type: DEVICE_TYPES) => {
   switch (type) {
@@ -72,20 +72,33 @@ export const sortDescending = (devices: DEVICE[], sortType: SORT_TYPES) => {
   }
   if (sortType === "name") {
     return devices.sort((a, b) =>
-      a.system_name.toLocaleLowerCase() > b.system_name.toLocaleLowerCase()
-        ? 1
-        : -1
+      a.system_name.toLowerCase() > b.system_name.toLowerCase() ? 1 : -1
     );
   }
 
   return devices;
 };
 
-export const filterDevices = (devices: DEVICE[], filterType: FILTER_TYPES) => {
-  if (devices.length === 0) return [];
+export const filterDevices = (
+  devices: DEVICE[],
+  filterType: FILTER_TYPES,
+  searchCriteria: string
+) => {
+  if (searchCriteria) {
+    const searchRegex = new RegExp(searchCriteria.toLowerCase());
+
+    if (filterType === "ALL")
+      return devices.filter((device) =>
+        searchRegex.test(device.system_name.toLowerCase())
+      );
+
+    return devices.filter(
+      (device) =>
+        device.type === filterType &&
+        searchRegex.test(device.system_name.toLowerCase())
+    );
+  }
+
   if (filterType === "ALL") return devices;
-  const filteredDevices = devices.filter(
-    (device) => device.type === filterType
-  );
-  return filteredDevices;
+  return devices.filter((device) => device.type === filterType);
 };

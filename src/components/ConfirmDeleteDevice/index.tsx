@@ -20,13 +20,17 @@ export const ConfirmDeleteDevice = ({
   const dispatch = useAppDispatch();
 
   const handleDeleteDevice = async () => {
-    const rawData = await fetch(`${GET_DEVICES_URL}/${selectedDevice.id}`, {
-      method: "DELETE",
-    });
-    const data = await rawData.json();
-    if (data) {
-      dispatch(setShowModal(false));
-      dispatch(setRefetchDevices(true));
+    try {
+      const rawData = await fetch(`${GET_DEVICES_URL}/${selectedDevice.id}`, {
+        method: "DELETE",
+      });
+      const data = await rawData.json();
+      if (data) {
+        dispatch(setShowModal(false));
+        dispatch(setRefetchDevices(true));
+      }
+    } catch (e) {
+      console.log("There an error deleting the device ", e);
     }
   };
 

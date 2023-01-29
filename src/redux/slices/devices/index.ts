@@ -14,6 +14,7 @@ const initialState: DEVICES_SLICE_INITIAL_STATE = {
   filteredDevices: [],
   refetchDevices: false,
   filterBy: "ALL",
+  searchCriteria: "",
 };
 
 const deviceSlice = createSlice({
@@ -22,8 +23,13 @@ const deviceSlice = createSlice({
   reducers: {
     setDevices(state, action: PayloadAction<DEVICE[]>) {
       const newDevices = action.payload;
+      const tempNewDevices = [...newDevices];
+      const filteredDevices = filterDevices(
+        tempNewDevices,
+        state.filterBy,
+        state.searchCriteria
+      );
       state.devices = newDevices;
-      const filteredDevices = filterDevices(newDevices, state.filterBy);
       state.filteredDevices = sortDescending(filteredDevices, state.sortBy);
     },
     setRefetchDevices(state, action: PayloadAction<boolean>) {
@@ -36,17 +42,34 @@ const deviceSlice = createSlice({
     },
     setFilterBy(state, action: PayloadAction<FILTER_TYPES>) {
       state.filterBy = action.payload;
-      state.filteredDevices = filterDevices(state.devices, state.filterBy);
-      state.filteredDevices = sortDescending(
-        state.filteredDevices,
-        state.sortBy
+      const tempDevices = [...state.devices];
+      const filteredDevices = filterDevices(
+        tempDevices,
+        state.filterBy,
+        state.searchCriteria
       );
+      state.filteredDevices = sortDescending(filteredDevices, state.sortBy);
+    },
+    setSearchCriteria(state, action: PayloadAction<string>) {
+      const tempDevices = [...state.devices];
+      const filteredDevices = filterDevices(
+        tempDevices,
+        state.filterBy,
+        action.payload
+      );
+      state.searchCriteria = action.payload;
+      state.filteredDevices = sortDescending(filteredDevices, state.sortBy);
     },
   },
 });
 
 const { actions, reducer } = deviceSlice;
-export const { setDevices, setRefetchDevices, setSortBy, setFilterBy } =
-  actions;
+export const {
+  setDevices,
+  setRefetchDevices,
+  setSortBy,
+  setFilterBy,
+  setSearchCriteria,
+} = actions;
 
 export default reducer;

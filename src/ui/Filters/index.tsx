@@ -1,6 +1,4 @@
 import Icon from "@mui/material/Icon";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -16,7 +14,7 @@ import {
   SORT_TYPES,
 } from "../../redux/slices/devices/interfaces";
 import { FILTERS_OPTIONS, SORT_OPTIONS } from "./constants";
-import searchImg from "../../assets/search.svg";
+import { SearchInput } from "../../components";
 import reloadImg from "../../assets/reload.svg";
 
 export const Filters = () => {
@@ -41,25 +39,7 @@ export const Filters = () => {
       }}
     >
       <Box>
-        <TextField
-          placeholder="Search"
-          sx={{
-            width: "270px",
-            fieldset: {
-              border: "1px solid #D1D0D9",
-              borderRadius: "4px",
-            },
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={{ border: "none" }}>
-                <Icon>
-                  <img src={searchImg} alt="searchImg" />
-                </Icon>
-              </InputAdornment>
-            ),
-          }}
-        />
+        <SearchInput />
         <Select
           sx={{
             minWidth: "227px",
@@ -88,9 +68,11 @@ export const Filters = () => {
         <Select
           sx={{
             marginLeft: "8px",
-            border: "1px solid #D1D0D9",
-            borderRadius: "4px",
             minWidth: "315px",
+            fieldset: {
+              border: "1px solid #D1D0D9",
+              borderRadius: "4px",
+            },
           }}
           renderValue={(selectedOption) =>
             `Sort by: ${

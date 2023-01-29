@@ -25,9 +25,13 @@ export const DevicesList = () => {
   };
 
   const getDevices = useCallback(async () => {
-    const rawData = await fetch(GET_DEVICES_URL);
-    const data: DEVICE[] = await rawData.json();
-    dispatch(setDevices(data));
+    try {
+      const rawData = await fetch(GET_DEVICES_URL);
+      const data: DEVICE[] = await rawData.json();
+      dispatch(setDevices(data));
+    } catch (e) {
+      console.log("There was an error getting the devices ", e);
+    }
   }, [dispatch]);
 
   useEffect(() => {

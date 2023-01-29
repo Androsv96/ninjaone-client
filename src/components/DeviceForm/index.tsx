@@ -54,7 +54,7 @@ export const DeviceForm = ({ handleCloseModal }: Props) => {
             dispatch(setRefetchDevices(true));
           }
         } catch (e) {
-          console.log("There was an error updating the device ", e);
+          console.log("There was an error ", e);
         }
       },
       validationSchema,

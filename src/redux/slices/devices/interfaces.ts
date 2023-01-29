@@ -15,4 +15,5 @@ export interface DEVICES_SLICE_INITIAL_STATE {
   filteredDevices: DEVICE[];
   sortBy: SORT_TYPES;
   filterBy: FILTER_TYPES;
+  searchCriteria: string;
 }
