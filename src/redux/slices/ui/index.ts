@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PERFORM_ACTION, UI_SLICE_INITIAL_STATE } from "./interface";
 
-const initialState: UI_SLICE_INITIAL_STATE = {
+export const initialState: UI_SLICE_INITIAL_STATE = {
   showModal: false,
   actionToPerform: "add",
   selectedDevice: {

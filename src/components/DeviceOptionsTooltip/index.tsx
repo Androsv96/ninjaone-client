@@ -73,6 +73,7 @@ export const DevicesOptionsTooltip = ({ device }: Props) => {
         <img src={dotsImg} alt="dotsImg" />
       </Icon>
       <Popover
+        role="dialog"
         id={id}
         open={open}
         anchorEl={anchorEl}

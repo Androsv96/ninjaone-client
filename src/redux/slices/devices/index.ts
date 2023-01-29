@@ -8,7 +8,7 @@ import {
 } from "./interfaces";
 import { filterDevices, sortDescending } from "../../../utils/functions";
 
-const initialState: DEVICES_SLICE_INITIAL_STATE = {
+export const initialState: DEVICES_SLICE_INITIAL_STATE = {
   devices: [],
   sortBy: "hdd_capacity",
   filteredDevices: [],
