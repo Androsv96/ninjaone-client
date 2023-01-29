@@ -6,17 +6,23 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setSortBy } from "../../redux/slices/devices";
-import { SORT_OPTIONS } from "./constants";
+import { setFilterBy, setSortBy } from "../../redux/slices/devices";
+import {
+  FILTER_TYPES,
+  SORT_TYPES,
+} from "../../redux/slices/devices/interfaces";
+import { FILTERS_OPTIONS, SORT_OPTIONS } from "./constants";
 import searchImg from "../../assets/search.svg";
-import { SORT_TYPES } from "../../redux/slices/devices/interfaces";
 
 export const Filters = () => {
   const dispatch = useAppDispatch();
-  const { sortBy } = useAppSelector((state) => state.devicesSlice);
+  const { sortBy, filterBy } = useAppSelector((state) => state.devicesSlice);
 
   const handleOnSortChange = ({ target }: SelectChangeEvent<unknown>) =>
     dispatch(setSortBy(target.value as SORT_TYPES));
+
+  const handleOnChangeFilter = ({ target }: SelectChangeEvent<unknown>) =>
+    dispatch(setFilterBy(target.value as FILTER_TYPES));
 
   return (
     <Box sx={{ marginTop: "30px" }}>
@@ -39,18 +45,30 @@ export const Filters = () => {
           ),
         }}
       />
-      {/* <Select
+      <Select
         sx={{
-          minWidth: "155px",
+          minWidth: "227px",
           marginLeft: "8px",
           fieldset: {
             border: "1px solid #D1D0D9",
             borderRadius: "4px",
           },
         }}
+        renderValue={(selectedOption) =>
+          `Device Type: ${
+            FILTERS_OPTIONS.find((option) => option.key === selectedOption)
+              ?.value
+          }`
+        }
+        value={filterBy}
+        onChange={handleOnChangeFilter}
       >
-        <MenuItem value="all">Device Type: ALL</MenuItem>
-      </Select> */}
+        {FILTERS_OPTIONS.map(({ key, value }) => (
+          <MenuItem key={key} value={key}>
+            {value}
+          </MenuItem>
+        ))}
+      </Select>
 
       <Select
         sx={{

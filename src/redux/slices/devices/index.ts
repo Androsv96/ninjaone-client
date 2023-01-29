@@ -1,13 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { DEVICE, DEVICES_SLICE_INITIAL_STATE, SORT_TYPES } from "./interfaces";
-import { sortDescending } from "../../../utils/functions";
+import {
+  DEVICE,
+  DEVICES_SLICE_INITIAL_STATE,
+  FILTER_TYPES,
+  SORT_TYPES,
+} from "./interfaces";
+import { filterDevices, sortDescending } from "../../../utils/functions";
 
 const initialState: DEVICES_SLICE_INITIAL_STATE = {
   devices: [],
   sortBy: "hdd_capacity",
   filteredDevices: [],
   refetchDevices: false,
+  filterBy: "ALL",
 };
 
 const deviceSlice = createSlice({
@@ -16,20 +22,31 @@ const deviceSlice = createSlice({
   reducers: {
     setDevices(state, action: PayloadAction<DEVICE[]>) {
       const newDevices = action.payload;
-      state.devices = sortDescending(newDevices, state.sortBy);
+      state.devices = newDevices;
+      state.filteredDevices = filterDevices(newDevices, state.filterBy);
+      state.filteredDevices = sortDescending(newDevices, state.sortBy);
     },
     setRefetchDevices(state, action: PayloadAction<boolean>) {
       state.refetchDevices = action.payload;
     },
     setSortBy(state, action: PayloadAction<SORT_TYPES>) {
       const newDevices = [...state.devices];
-      state.devices = sortDescending(newDevices, action.payload);
+      state.filteredDevices = sortDescending(newDevices, action.payload);
       state.sortBy = action.payload;
+    },
+    setFilterBy(state, action: PayloadAction<FILTER_TYPES>) {
+      state.filterBy = action.payload;
+      state.filteredDevices = filterDevices(state.devices, state.filterBy);
+      state.filteredDevices = sortDescending(
+        state.filteredDevices,
+        state.sortBy
+      );
     },
   },
 });
 
 const { actions, reducer } = deviceSlice;
-export const { setDevices, setRefetchDevices, setSortBy } = actions;
+export const { setDevices, setRefetchDevices, setSortBy, setFilterBy } =
+  actions;
 
 export default reducer;

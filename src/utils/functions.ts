@@ -2,6 +2,7 @@ import {
   DEVICE,
   DEVICE_TYPES,
   SORT_TYPES,
+  FILTER_TYPES,
 } from "../redux/slices/devices/interfaces";
 
 import { ACTIONS_TO_PERFORM } from "../redux/slices/ui/interface";
@@ -63,6 +64,7 @@ export const getMethodFromActionToPerform = (
 };
 
 export const sortDescending = (devices: DEVICE[], sortType: SORT_TYPES) => {
+  if (devices.length === 0) return [];
   if (sortType === "hdd_capacity") {
     return devices.sort((a, b) =>
       Number(a.hdd_capacity) > Number(b.hdd_capacity) ? -1 : 1
@@ -77,4 +79,13 @@ export const sortDescending = (devices: DEVICE[], sortType: SORT_TYPES) => {
   }
 
   return devices;
+};
+
+export const filterDevices = (devices: DEVICE[], filterType: FILTER_TYPES) => {
+  if (devices.length === 0) return [];
+  if (filterType === "ALL") return devices;
+  const filteredDevices = devices.filter(
+    (device) => device.type === filterType
+  );
+  return filteredDevices;
 };

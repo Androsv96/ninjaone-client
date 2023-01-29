@@ -13,7 +13,7 @@ import { AddDevice, Filters } from "../";
 
 export const DevicesList = () => {
   const dispatch = useAppDispatch();
-  const { refetchDevices, devices } = useAppSelector(
+  const { refetchDevices, filteredDevices } = useAppSelector(
     (state) => state.devicesSlice
   );
   const [selectedListItem, setSelectedListItem] = useState("");
@@ -65,8 +65,8 @@ export const DevicesList = () => {
         }}
       >
         <List>
-          {devices.length > 0 &&
-            devices.map((device) => (
+          {filteredDevices.length > 0 &&
+            filteredDevices.map((device) => (
               <DeviceListItem
                 key={device.id}
                 hoveredListItemId={selectedListItem}
