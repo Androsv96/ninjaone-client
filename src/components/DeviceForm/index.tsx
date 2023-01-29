@@ -3,8 +3,6 @@ import { useFormik } from "formik";
 import { FormControl, TextField } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
 import { setShowModal } from "../../redux/slices/ui";
@@ -12,8 +10,9 @@ import { setRefetchDevices } from "../../redux/slices/devices";
 import { DEVICE } from "../../redux/slices/devices/interfaces";
 import { ErrorLabel } from "../ErrorLabel";
 import { TYPES } from "./constants";
-import { validationSchema } from "./validation-schema";
 import { GET_DEVICES_URL } from "../../utils/constants";
+import { ButtonsSection } from "./components";
+import { validationSchema } from "./validation-schema";
 
 interface Props {
   handleCloseModal: () => void;
@@ -61,14 +60,19 @@ export const DeviceForm = ({ handleCloseModal }: Props) => {
     });
 
   const handleCapacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regex = new RegExp(/^[0-9]*$/);
+    const regex = new RegExp(/^\d*$/);
     if (regex.test(e.currentTarget.value))
       setFieldValue("hdd_capacity", e.currentTarget.value);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <FormControl sx={{ display: "flex", flexDirection: "column" }}>
+      <FormControl
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <label style={{ display: "flex", flexDirection: "column" }}>
           <span>System name *</span>
           <TextField
@@ -108,27 +112,7 @@ export const DeviceForm = ({ handleCloseModal }: Props) => {
           {errors.hdd_capacity && <ErrorLabel message={errors.hdd_capacity} />}
         </label>
       </FormControl>
-      <Box sx={{ display: "flex", justifyContent: "end", marginTop: "32px" }}>
-        <Button
-          variant="outlined"
-          sx={{ marginRight: "8px" }}
-          onClick={handleCloseModal}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: "#337AB7",
-            ":hover": {
-              bgcolor: "#3370fb",
-            },
-          }}
-          type="submit"
-        >
-          Submit
-        </Button>
-      </Box>
+      <ButtonsSection handleCloseModal={handleCloseModal} />
     </form>
   );
 };

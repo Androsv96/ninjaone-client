@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 
 import { Appbar } from "./components";
-import { DevicesList } from "./ui";
+import { Home } from "./ui";
 
 function App() {
   return (
     <Box>
       <Appbar />
-      <DevicesList />
+      <Home />
     </Box>
   );
 }

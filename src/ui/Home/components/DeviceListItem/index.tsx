@@ -10,8 +10,8 @@ import {
   capitalizeFirstLetter,
   getDeviceLogo,
 } from "../../../../utils/functions";
-
 import { CustomModal, DevicesOptionsTooltip } from "../../../../components";
+
 interface Props {
   device: DEVICE;
   hoveredListItemId: string;

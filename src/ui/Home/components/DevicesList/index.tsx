@@ -4,20 +4,21 @@ import List from "@mui/material/List";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import { DEVICE } from "../../redux/slices/devices/interfaces";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { DeviceListItem } from "./components";
-import { GET_DEVICES_URL } from "../../utils/constants";
-import { setDevices, setRefetchDevices } from "../../redux/slices/devices";
-import { AddDevice, Filters } from "../";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import {
+  setDevices,
+  setRefetchDevices,
+} from "../../../../redux/slices/devices";
+import { DEVICE } from "../../../../redux/slices/devices/interfaces";
+import { GET_DEVICES_URL } from "../../../../utils/constants";
+import { DeviceListItem } from "../DeviceListItem";
 
 export const DevicesList = () => {
-  const dispatch = useAppDispatch();
+  const [selectedListItem, setSelectedListItem] = useState("");
   const { refetchDevices, filteredDevices } = useAppSelector(
     (state) => state.devicesSlice
   );
-
-  const [selectedListItem, setSelectedListItem] = useState("");
+  const dispatch = useAppDispatch();
 
   const handleOnSelectedListItem = (id: string) => {
     if (id === selectedListItem) return setSelectedListItem("");
@@ -46,12 +47,7 @@ export const DevicesList = () => {
   }, [refetchDevices, getDevices, dispatch]);
 
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", padding: "24px 31px" }}
-    >
-      <AddDevice />
-      <Filters />
-
+    <>
       <Typography
         sx={{
           color: "#211F33",
@@ -81,6 +77,6 @@ export const DevicesList = () => {
             ))}
         </List>
       </Box>
-    </Box>
+    </>
   );
 };

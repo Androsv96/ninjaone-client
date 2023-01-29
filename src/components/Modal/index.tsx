@@ -3,11 +3,22 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Icon from "@mui/material/Icon";
 
-import { ConfirmDeleteDevice, DeviceForm } from "../";
 import { getActionToPerform } from "../../utils/functions";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/";
 import { setShowModal } from "../../redux/slices/ui";
 import closeImg from "../../assets/close.svg";
+import { ConfirmDeleteDevice, DeviceForm } from "../";
+
+const backdropComp = () => (
+  <div
+    style={{
+      backgroundColor: "#211f33",
+      opacity: 0.1,
+      width: "100%",
+      height: "100%",
+    }}
+  />
+);
 
 export const CustomModal = () => {
   const dispatch = useAppDispatch();
@@ -18,19 +29,7 @@ export const CustomModal = () => {
   const handleCloseModal = () => dispatch(setShowModal(false));
 
   return (
-    <Modal
-      open={showModal}
-      BackdropComponent={() => (
-        <div
-          style={{
-            backgroundColor: "#211f33",
-            opacity: 0.1,
-            width: "100%",
-            height: "100%",
-          }}
-        />
-      )}
-    >
+    <Modal open={showModal} BackdropComponent={backdropComp}>
       <Box
         sx={{
           position: "absolute",
